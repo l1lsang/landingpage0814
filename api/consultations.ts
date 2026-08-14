@@ -1,6 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { FieldValue } from 'firebase-admin/firestore'
+import type { DocumentReference } from 'firebase-admin/firestore'
+import type { ConsultationDelivery } from '../server/consultation-delivery.js'
 import { getFirebaseDatabase } from '../server/firebase-admin.js'
+import { appendConsultationToGoogleSheets } from '../server/google-sheets.js'
+import { sendConsultationToTelegram } from '../server/telegram.js'
 
 const availableTimes = new Set([
   '오전 9시 ~ 12시',
@@ -22,6 +26,16 @@ type ConsultationBody = {
 function cleanText(value: unknown, maximumLength: number) {
   if (typeof value !== 'string') return ''
   return value.trim().replace(/\s+/g, ' ').slice(0, maximumLength)
+}
+
+function getErrorMessage(error: unknown) {
+  if (!(error instanceof Error)) return 'Unknown delivery error'
+  return error.message.replace(/[\r\n]+/g, ' ').slice(0, 240)
+}
+
+function getDeliveryStatus(result: PromiseSettledResult<void>) {
+  if (result.status === 'fulfilled') return { status: 'delivered' }
+  return { status: 'failed', error: getErrorMessage(result.reason) }
 }
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
@@ -64,27 +78,80 @@ export default async function handler(request: VercelRequest, response: VercelRe
     return response.status(400).json({ message: '개인정보 처리방침 동의가 필요합니다.' })
   }
 
+  const receivedAt = new Date()
+  const country = cleanText(request.headers['x-vercel-ip-country'], 8) || null
+  const source = 'landing-page'
+  let document: DocumentReference
+
   try {
-    const document = await getFirebaseDatabase().collection('consultationRequests').add({
+    const database = getFirebaseDatabase()
+    document = database.collection('consultationRequests').doc()
+    await document.set({
       name,
       phone,
       availableTime,
       message,
       privacyAccepted: true,
       status: 'new',
-      source: 'landing-page',
+      source,
       locale: 'ko-KR',
-      country: cleanText(request.headers['x-vercel-ip-country'], 8) || null,
+      country,
       userAgent: cleanText(request.headers['user-agent'], 300) || null,
       createdAt: FieldValue.serverTimestamp(),
-    })
-
-    return response.status(201).json({
-      message: '상담이 안전하게 접수되었습니다.',
-      reference: document.id,
+      delivery: {
+        googleSheets: { status: 'pending' },
+        telegram: { status: 'pending' },
+      },
     })
   } catch (error) {
-    console.error('Failed to save consultation request', error)
+    console.error('Failed to save consultation request:', getErrorMessage(error))
     return response.status(500).json({ message: '접수 서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.' })
   }
+
+  const consultation: ConsultationDelivery = {
+    reference: document.id,
+    receivedAt,
+    name,
+    phone,
+    availableTime,
+    message,
+    country,
+    source,
+  }
+  const [googleSheetsResult, telegramResult] = await Promise.allSettled([
+    appendConsultationToGoogleSheets(consultation),
+    sendConsultationToTelegram(consultation),
+  ])
+  const delivery = {
+    googleSheets: getDeliveryStatus(googleSheetsResult),
+    telegram: getDeliveryStatus(telegramResult),
+  }
+
+  if (googleSheetsResult.status === 'rejected') {
+    console.error('Google Sheets delivery failed:', getErrorMessage(googleSheetsResult.reason))
+  }
+  if (telegramResult.status === 'rejected') {
+    console.error('Telegram delivery failed:', getErrorMessage(telegramResult.reason))
+  }
+
+  try {
+    await document.update({
+      delivery,
+      deliveryUpdatedAt: FieldValue.serverTimestamp(),
+    })
+  } catch (error) {
+    console.error('Failed to update consultation delivery status:', getErrorMessage(error))
+  }
+
+  const allDelivered = googleSheetsResult.status === 'fulfilled' && telegramResult.status === 'fulfilled'
+  return response.status(201).json({
+    message: allDelivered
+      ? '상담이 접수되었으며 담당자에게 안전하게 전달되었습니다.'
+      : '상담은 접수되었습니다. 담당자 알림 전송이 지연되어 확인 후 처리하겠습니다.',
+    reference: document.id,
+    delivery: {
+      googleSheets: delivery.googleSheets.status,
+      telegram: delivery.telegram.status,
+    },
+  })
 }
