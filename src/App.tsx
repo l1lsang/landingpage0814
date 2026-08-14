@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { CSSProperties, FormEvent } from 'react'
 import './App.css'
 
 const cases = [
@@ -14,6 +14,7 @@ const cases = [
 ]
 
 const awards = [1, 2, 3, 4, 5]
+const rollingKeywords = ['증거수집', '사실확인', '소송준비']
 
 const reasons = [
   {
@@ -105,10 +106,89 @@ function ArrowIcon() {
   return <span aria-hidden="true">→</span>
 }
 
+function AnimatedNumber({ value, duration = 1600 }: { value: number, duration?: number }) {
+  const elementRef = useRef<HTMLSpanElement>(null)
+  const [displayValue, setDisplayValue] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? value : 0
+  ))
+
+  useEffect(() => {
+    const element = elementRef.current
+    if (!element) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) return
+
+    let animationFrame = 0
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+
+      const startTime = performance.now()
+      const update = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1)
+        const easedProgress = 1 - Math.pow(1 - progress, 3)
+        setDisplayValue(Math.round(value * easedProgress))
+
+        if (progress < 1) animationFrame = requestAnimationFrame(update)
+      }
+
+      animationFrame = requestAnimationFrame(update)
+      observer.disconnect()
+    }, { threshold: 0.55 })
+
+    observer.observe(element)
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(animationFrame)
+    }
+  }, [duration, value])
+
+  return <span ref={elementRef} className="count-up">{displayValue.toLocaleString('ko-KR')}</span>
+}
+
+function useScrollReveal() {
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reducedMotion) {
+      elements.forEach((element) => element.classList.add('is-visible'))
+      return
+    }
+
+    document.documentElement.classList.add('motion-ready')
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        entry.target.classList.add('is-visible')
+        observer.unobserve(entry.target)
+      })
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 })
+
+    elements.forEach((element) => observer.observe(element))
+    return () => {
+      observer.disconnect()
+      document.documentElement.classList.remove('motion-ready')
+    }
+  }, [])
+}
+
 function App() {
   const [form, setForm] = useState<ConsultationForm>(initialForm)
   const [submitState, setSubmitState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
+  const [rollingKeywordIndex, setRollingKeywordIndex] = useState(0)
+
+  useScrollReveal()
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const interval = window.setInterval(() => {
+      setRollingKeywordIndex((current) => (current + 1) % rollingKeywords.length)
+    }, 2400)
+
+    return () => window.clearInterval(interval)
+  }, [])
 
   const goToConsultation = () => {
     document.querySelector('#consultation')?.scrollIntoView({ behavior: 'smooth' })
@@ -161,11 +241,16 @@ function App() {
         </div>
       </header>
 
-      <section className="hero-section page-shell" aria-labelledby="hero-title">
+      <section className="hero-section page-shell" aria-labelledby="hero-title" data-reveal="scale">
         <div className="hero-card">
           <div className="hero-content">
             <p className="eyebrow">외도 증거수집 전문 탐정법인</p>
-            <h1 id="hero-title">증거수집, 소송까지<br />확실하게 시작하기</h1>
+            <h1 id="hero-title">
+              <span className="rolling-window" aria-label={rollingKeywords[rollingKeywordIndex]}>
+                <span className="rolling-keyword" key={rollingKeywords[rollingKeywordIndex]} aria-hidden="true">{rollingKeywords[rollingKeywordIndex]}</span>
+              </span>
+              , 소송까지<br />확실하게 시작하기
+            </h1>
             <p className="hero-description">비용없는 무료상담, 비밀보장 서비스</p>
             <div className="hero-actions">
               <button className="button button-primary" type="button" onClick={goToConsultation}>원클릭 상담</button>
@@ -173,44 +258,44 @@ function App() {
             </div>
           </div>
           <div className="hero-metrics" aria-label="주요 실적">
-            <div><strong>상담건수</strong><span><b>15,087</b> +</span></div>
-            <div><strong>만족도</strong><span><b>99</b> %</span></div>
+            <div><strong>상담건수</strong><span><b><AnimatedNumber value={15087} /></b> +</span></div>
+            <div><strong>만족도</strong><span><b><AnimatedNumber value={99} /></b> %</span></div>
           </div>
         </div>
       </section>
 
       <section className="coverage-section section" aria-labelledby="coverage-title">
         <div className="page-shell coverage-grid">
-          <div className="section-copy">
+          <div className="section-copy" data-reveal="left">
             <p className="section-kicker">전국조사현황</p>
             <h2 id="coverage-title">단순한 증거 수집이 아닙니다</h2>
             <p>승소 가능성을 고려한 전략형 증거 설계를 진행합니다.</p>
             <div className="coverage-numbers">
-              <p>시 / 군 / 구 지역수 <strong>120<sup>+</sup></strong></p>
-              <p>서울특별시 · 경기도 외 전국지역 <strong>42<sup>%</sup></strong></p>
+              <p>시 / 군 / 구 지역수 <strong><AnimatedNumber value={120} /><sup>+</sup></strong></p>
+              <p>서울특별시 · 경기도 외 전국지역 <strong><AnimatedNumber value={42} /><sup>%</sup></strong></p>
             </div>
             <p className="muted">법과 정성이 만날 때, 감춰진 진실이 드러납니다.</p>
           </div>
-          <img className="coverage-map" src="/images/coverage-map.webp" alt="전국 조사 지역 분포 지도" />
+          <img className="coverage-map" src="/images/coverage-map.webp" alt="전국 조사 지역 분포 지도" data-reveal="right" />
         </div>
       </section>
 
       <section className="experience-section section" aria-labelledby="experience-title">
         <div className="page-shell">
-          <div className="section-heading centered">
+          <div className="section-heading centered" data-reveal="up">
             <p className="section-kicker">PROVEN EXPERIENCE</p>
             <h2 id="experience-title">수많은 증거수집 경험</h2>
             <p>신뢰할 수 있는 경력의 전문가들이 팀을 꾸려<br />효과적으로 증거를 수집하며 해결하고 있습니다.</p>
           </div>
-          <div className="proof-cards">
+          <div className="proof-cards" data-reveal="up">
             <article style={{ backgroundImage: "url('/images/proof-handshake.webp')" }}>
-              <span>만족도</span><strong>99%</strong>
+              <span>만족도</span><strong><AnimatedNumber value={99} />%</strong>
             </article>
             <article style={{ backgroundImage: "url('/images/proof-office.webp')" }}>
-              <span>진행건수</span><strong>15,087+</strong>
+              <span>진행건수</span><strong><AnimatedNumber value={15087} />+</strong>
             </article>
           </div>
-          <div className="case-board">
+          <div className="case-board" data-reveal="up">
             <div className="case-board-title"><strong>의뢰 사건 진행목록</strong><span>날짜</span></div>
             <ul>
               {cases.map(([title, date]) => <li key={`${title}-${date}`}><span>{title}</span><time>{date}</time></li>)}
@@ -222,11 +307,11 @@ function App() {
 
       <section className="insight-section section" aria-labelledby="insight-title">
         <div className="page-shell">
-          <div className="section-heading centered">
+          <div className="section-heading centered" data-reveal="up">
             <p className="section-kicker">TRUSTED RECORD</p>
             <h2 id="insight-title">탐정법인 정성 INSIGHT</h2>
           </div>
-          <div className="insight-grid">
+          <div className="insight-grid" data-reveal="up">
             <img src="/images/press.webp" alt="탐정사무소 정성 소비자 선호 브랜드 수상 보도자료" />
             <article>
               <span>NEWS</span>
@@ -235,55 +320,64 @@ function App() {
               <time>2024.10.15</time>
             </article>
           </div>
-          <div className="award-list">
-            {awards.map((award) => <img key={award} src={`/images/award-${award}.webp`} alt={`탐정법인 정성 수상 인증 ${award}`} />)}
+          <div className="award-marquee" data-reveal="up" aria-label="탐정법인 정성 수상 인증">
+            <div className="award-track">
+              {[...awards, ...awards].map((award, index) => (
+                <img
+                  key={`${award}-${index}`}
+                  src={`/images/award-${award}.webp`}
+                  alt={index < awards.length ? `탐정법인 정성 수상 인증 ${award}` : ''}
+                  aria-hidden={index >= awards.length}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       <section className="success-section section" aria-labelledby="success-title">
         <div className="page-shell">
-          <div className="section-heading centered">
+          <div className="section-heading centered" data-reveal="up">
             <p className="section-kicker">REAL REVIEW</p>
             <h2 id="success-title">탐정법인 정성 성공후기</h2>
           </div>
-          <div className="success-card">
+          <div className="success-card" data-reveal="scale">
             <div className="success-image-wrap"><img src="/images/success-chat.webp" alt="의뢰인과의 실제 상담 대화 예시" /></div>
             <div className="success-copy"><span>한OO 님</span><strong>배우자 부정행위 이혼소송 문제<br />7일 만에 증거 수집 후 완벽해결</strong></div>
           </div>
-          <button className="button button-blue" type="button" onClick={goToConsultation}>지금 바로 해결하기</button>
+          <button className="button button-blue" type="button" onClick={goToConsultation} data-reveal="up">지금 바로 해결하기</button>
         </div>
       </section>
 
       <section className="reasons-section section" aria-labelledby="reasons-title">
         <div className="page-shell">
-          <div className="section-heading centered">
+          <div className="section-heading centered" data-reveal="up">
             <p className="section-kicker">WHY JEONG SEONG</p>
             <h2 id="reasons-title">정성과 함께 하셔야하는 이유</h2>
             <p>아직 고민되시나요?</p>
           </div>
           <div className="reason-list">
-            {reasons.map((reason) => (
-              <article key={reason.title}>
+            {reasons.map((reason, index) => (
+              <article key={reason.title} data-reveal="left" style={{ '--reveal-delay': `${index * 90}ms` } as CSSProperties}>
                 <img src={reason.icon} alt="" />
                 <div><h3>{reason.title}</h3><p>{reason.description}</p></div>
               </article>
             ))}
           </div>
-          <button className="button button-blue" type="button" onClick={goToConsultation}>상담 접수 바로가기</button>
+          <button className="button button-blue" type="button" onClick={goToConsultation} data-reveal="up">상담 접수 바로가기</button>
         </div>
       </section>
 
       <section className="process-section section" aria-labelledby="process-title">
         <div className="page-shell">
-          <div className="section-heading centered">
+          <div className="section-heading centered" data-reveal="up">
             <p className="section-kicker">PROCESS</p>
             <h2 id="process-title">이렇게 진행됩니다</h2>
             <p>논스톱 해결 진행 정성은 가능합니다!</p>
           </div>
           <div className="process-grid">
             {steps.map((step, index) => (
-              <article key={step.title}>
+              <article key={step.title} data-reveal="up" style={{ '--reveal-delay': `${(index % 2) * 100}ms` } as CSSProperties}>
                 <div className="step-image"><img src={`/images/step-${index + 1}.webp`} alt="" /><span>{index + 1}</span></div>
                 <div className="step-copy"><h3>{step.title}</h3><p>{step.description}</p></div>
               </article>
@@ -294,13 +388,13 @@ function App() {
 
       <section id="consultation" className="consultation-section section" aria-labelledby="consultation-title">
         <div className="page-shell">
-          <Brand />
-          <div className="section-heading centered">
+          <div data-reveal="left"><Brand /></div>
+          <div className="section-heading centered" data-reveal="up">
             <p className="section-kicker">PRIVATE CONSULTATION</p>
             <h2 id="consultation-title">확실한 결과 정성이 책임집니다</h2>
           </div>
-          <div className="chat-bubbles" aria-hidden="true"><p>탐정법인 정성입니다.<br />무엇을 도와드릴까요?</p><p>심증은 있는데… 물증이 없어요.<br />가능할까요?</p></div>
-          <form className="consultation-form" onSubmit={submitConsultation}>
+          <div className="chat-bubbles" aria-hidden="true" data-reveal="scale"><p>탐정법인 정성입니다.<br />무엇을 도와드릴까요?</p><p>심증은 있는데… 물증이 없어요.<br />가능할까요?</p></div>
+          <form className="consultation-form" onSubmit={submitConsultation} data-reveal="up">
             <div className="honeypot" aria-hidden="true"><label htmlFor="website">웹사이트</label><input id="website" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={(event) => setForm({ ...form, website: event.target.value })} /></div>
             <label><span>이름</span><input required maxLength={30} autoComplete="name" placeholder="성함을 입력해주세요." value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>
             <label><span>연락처</span><input required maxLength={20} inputMode="tel" autoComplete="tel" placeholder="연락처를 입력해주세요. (숫자만 입력)" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label>
