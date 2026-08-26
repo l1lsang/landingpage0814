@@ -1,20 +1,38 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties, FormEvent } from 'react'
 import './App.css'
 
-const cases = [
-  ['배우자 외도 관련 이혼소송', '2026.08.10'],
-  ['상간녀 손해배상 청구소송', '2026.08.09'],
-  ['배우자 부정행위 이혼소송', '2026.08.08'],
-  ['상간녀 위자료 청구소송', '2026.08.07'],
-  ['배우자 외도 증거 관련 소송', '2026.08.06'],
-  ['상간녀 부정행위 손해배상', '2026.08.05'],
-  ['외도로 인한 이혼 및 위자료', '2026.08.04'],
-  ['배우자 외도 상간녀 소송', '2026.08.03'],
+const caseTitles = [
+  '배우자 외도 관련 이혼소송',
+  '상간녀 손해배상 청구소송',
+  '배우자 부정행위 이혼소송',
+  '상간녀 위자료 청구소송',
+  '배우자 외도 증거 관련 소송',
+  '상간녀 부정행위 손해배상',
+  '외도로 인한 이혼 및 위자료',
+  '배우자 외도 상간녀 소송',
 ]
 
 const awards = [1, 2, 3, 4, 5]
-const rollingKeywords = ['증거수집', '사실확인', '소송준비']
+const rollingKeywords = ['증거수집', '사실확인', '현장확인']
+const mapPoints = [
+  [52.3, 94.5],
+  [63.8, 89.7],
+  [65.3, 80.0],
+  [76.0, 75.8],
+  [85.7, 78.7],
+  [88.5, 70.9],
+  [82.0, 64.3],
+  [67.6, 67.9],
+  [87.6, 58.7],
+  [70.3, 54.4],
+  [64.5, 47.6],
+  [73.6, 44.2],
+  [75.8, 41.4],
+  [66.8, 31.8],
+  [73.8, 27.4],
+  [83.7, 25.2],
+]
 
 const reasons = [
   {
@@ -23,17 +41,17 @@ const reasons = [
     description: '실전 노하우를 바탕으로 소송의 판도를 바꾸는 확실한 전문 조력자가 되어드립니다.',
   },
   {
-    icon: '/images/reason-response.png',
+    icon: '/images/reason-consultation.png',
     title: '단순 정보 수집을 넘어선 전략적 대응',
     description: '현장에서 직접 확보한 명확한 물증과 함께, 사전 해결을 위한 최적의 법리 방향성까지 제시합니다.',
   },
   {
-    icon: '/images/reason-speed.png',
+    icon: '/images/reason-step-3.svg',
     title: '단 2~3일, 불안을 확신으로 바꾸는 압도적 속도',
     description: '조급함과 불안 속에서 벗어날 수 있도록, 의뢰 즉시 착수하여 신속하게 결과를 전달합니다.',
   },
   {
-    icon: '/images/reason-consultation.png',
+    icon: '/images/reason-speed.png',
     title: '간편하고 신속한 온라인 상담',
     description: '직접 찾아오지 않으셔도 되는 온라인 상담으로 부담을 덜어드립니다.',
   },
@@ -70,7 +88,7 @@ const steps = [
   },
   {
     title: '해결 및 비밀유지',
-    description: '사건 마무리 / 진행 결과 안내 / 사후 상담 / 철저한 비밀 유지',
+    description: '사건 마무리 / 진행 결과 안내 / 사후 상담 / 철저한 비밀 유지 및 연구 폐기',
   },
 ]
 
@@ -104,6 +122,27 @@ function Brand() {
 
 function ArrowIcon() {
   return <span aria-hidden="true">→</span>
+}
+
+function ConsultationIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20 11.2a7.8 7.8 0 0 1-8 7.6 8.6 8.6 0 0 1-3.1-.6L4 20l1.5-4.3A7.3 7.3 0 0 1 4 11.2a7.8 7.8 0 0 1 8-7.6 7.8 7.8 0 0 1 8 7.6Z" />
+      <path d="M8.5 11.2h.01M12 11.2h.01M15.5 11.2h.01" />
+    </svg>
+  )
+}
+
+function getCaseDate(referenceDate: Date, daysAgo: number) {
+  const date = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate() - daysAgo, 12)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return {
+    dateTime: `${year}-${month}-${day}`,
+    label: `${year}.${month}.${day}`,
+  }
 }
 
 function AnimatedNumber({ value, duration = 1600 }: { value: number, duration?: number }) {
@@ -178,6 +217,8 @@ function App() {
   const [submitState, setSubmitState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
   const [rollingKeywordIndex, setRollingKeywordIndex] = useState(0)
+  const [caseDateReference, setCaseDateReference] = useState(() => new Date())
+  const processTrackRef = useRef<HTMLDivElement>(null)
 
   useScrollReveal()
 
@@ -190,9 +231,52 @@ function App() {
     return () => window.clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    const interval = window.setInterval(() => setCaseDateReference(new Date()), 60_000)
+    return () => window.clearInterval(interval)
+  }, [])
+
+  const caseRows = caseTitles.map((title, index) => ({
+    title,
+    ...getCaseDate(caseDateReference, index),
+  }))
+
   const goToConsultation = () => {
     document.querySelector('#consultation')?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const scrollProcess = useCallback((direction: -1 | 1) => {
+    const track = processTrackRef.current
+    const card = track?.querySelector<HTMLElement>('article')
+    if (!track || !card) return
+
+    const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0
+    const maxScroll = track.scrollWidth - track.clientWidth
+    const isAtStart = track.scrollLeft <= 4
+    const isAtEnd = track.scrollLeft >= maxScroll - 4
+    const nextPosition = direction > 0 && isAtEnd
+      ? 0
+      : direction < 0 && isAtStart
+        ? maxScroll
+        : track.scrollLeft + direction * (card.offsetWidth + gap)
+
+    track.scrollTo({
+      left: nextPosition,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    })
+  }, [])
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const interval = window.setInterval(() => {
+      const track = processTrackRef.current
+      if (!track || document.hidden || track.matches(':hover') || track.contains(document.activeElement)) return
+      scrollProcess(1)
+    }, 4200)
+
+    return () => window.clearInterval(interval)
+  }, [scrollProcess])
 
   const submitConsultation = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -246,14 +330,16 @@ function App() {
           <div className="hero-content">
             <p className="eyebrow">외도 증거수집 전문 탐정법인</p>
             <h1 id="hero-title">
-              <span className="rolling-window" aria-label={rollingKeywords[rollingKeywordIndex]}>
-                <span className="rolling-keyword" key={rollingKeywords[rollingKeywordIndex]} aria-hidden="true">{rollingKeywords[rollingKeywordIndex]}</span>
+              <span className="hero-title-line hero-title-line-top">
+                <span className="rolling-window" aria-label={rollingKeywords[rollingKeywordIndex]}>
+                  <span className="rolling-keyword" key={rollingKeywords[rollingKeywordIndex]} aria-hidden="true">{rollingKeywords[rollingKeywordIndex]}</span>
+                </span>
+                <span>, 소송까지</span>
               </span>
-              , 소송까지<br />확실하게 시작하기
+              <span className="hero-title-line hero-title-line-bottom">확실하게 시작하기</span>
             </h1>
-            <p className="hero-description">비용없는 무료상담, 비밀보장 서비스</p>
+            <p className="hero-description">오직 배우자의 외도와 불륜 사건만을 집요하게 파고드는 외도 전문 탐정법인</p>
             <div className="hero-actions">
-              <button className="button button-primary" type="button" onClick={goToConsultation}>원클릭 상담</button>
               <a className="button button-secondary" href="tel:010-0000-0000">전화 상담</a>
             </div>
           </div>
@@ -261,22 +347,6 @@ function App() {
             <div><strong>상담건수</strong><span><b><AnimatedNumber value={15087} /></b> +</span></div>
             <div><strong>만족도</strong><span><b><AnimatedNumber value={99} /></b> %</span></div>
           </div>
-        </div>
-      </section>
-
-      <section className="coverage-section section" aria-labelledby="coverage-title">
-        <div className="page-shell coverage-grid">
-          <div className="section-copy" data-reveal="left">
-            <p className="section-kicker">전국조사현황</p>
-            <h2 id="coverage-title">단순한 증거 수집이 아닙니다</h2>
-            <p>승소 가능성을 고려한 전략형 증거 설계를 진행합니다.</p>
-            <div className="coverage-numbers">
-              <p>시 / 군 / 구 지역수 <strong><AnimatedNumber value={120} /><sup>+</sup></strong></p>
-              <p>서울특별시 · 경기도 외 전국지역 <strong><AnimatedNumber value={42} /><sup>%</sup></strong></p>
-            </div>
-            <p className="muted">법과 정성이 만날 때, 감춰진 진실이 드러납니다.</p>
-          </div>
-          <img className="coverage-map" src="/images/coverage-map.webp" alt="전국 조사 지역 분포 지도" data-reveal="right" />
         </div>
       </section>
 
@@ -297,10 +367,42 @@ function App() {
           </div>
           <div className="case-board" data-reveal="up">
             <div className="case-board-title"><strong>의뢰 사건 진행목록</strong><span>날짜</span></div>
-            <ul>
-              {cases.map(([title, date]) => <li key={`${title}-${date}`}><span>{title}</span><time>{date}</time></li>)}
-            </ul>
-            <nav className="pagination" aria-label="사건 목록 페이지"><button type="button" aria-label="이전 페이지">‹</button><b>1</b><button type="button">2</button><button type="button">3</button><span>…</span><button type="button">713</button><button type="button" aria-label="다음 페이지">›</button></nav>
+            <div className="case-board-list-window" aria-label="최근 의뢰 사건 진행목록">
+              <ul className="case-board-list-track">
+                {[...caseRows, ...caseRows].map(({ title, dateTime, label }, index) => (
+                  <li key={`${title}-${index}`} aria-hidden={index >= caseRows.length}>
+                    <span>{title}</span>
+                    <time dateTime={dateTime}>{label}</time>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="coverage-section section" aria-labelledby="coverage-title">
+        <div className="page-shell coverage-grid">
+          <div className="section-copy" data-reveal="left">
+            <p className="section-kicker">전국조사현황</p>
+            <h2 id="coverage-title">단순한 증거 수집이 아닙니다</h2>
+            <p>승소 가능성을 고려한 전략형 증거 설계를 진행합니다.</p>
+            <div className="coverage-numbers">
+              <p>시 / 군 / 구 지역수 <strong><AnimatedNumber value={120} /><sup>+</sup></strong></p>
+              <p>서울특별시 · 경기도 외 전국지역 <strong><AnimatedNumber value={42} /><sup>%</sup></strong></p>
+            </div>
+            <p className="muted">법과 정성이 만날 때, 감춰진 진실이 드러납니다.</p>
+          </div>
+          <div className="coverage-map-visual" data-reveal="right">
+            <img className="coverage-map" src="/images/coverage-map.webp" alt="전국 조사 지역 분포 지도" />
+            <div className="map-points" aria-hidden="true">
+              {mapPoints.map(([left, top], index) => (
+                <span
+                  key={`${left}-${top}`}
+                  style={{ left: `${left}%`, top: `${top}%`, '--point-delay': `${(index % 6) * 180}ms` } as CSSProperties}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -335,20 +437,6 @@ function App() {
         </div>
       </section>
 
-      <section className="success-section section" aria-labelledby="success-title">
-        <div className="page-shell">
-          <div className="section-heading centered" data-reveal="up">
-            <p className="section-kicker">REAL REVIEW</p>
-            <h2 id="success-title">탐정법인 정성 성공후기</h2>
-          </div>
-          <div className="success-card" data-reveal="scale">
-            <div className="success-image-wrap"><img src="/images/success-chat.webp" alt="의뢰인과의 실제 상담 대화 예시" /></div>
-            <div className="success-copy"><span>한OO 님</span><strong>배우자 부정행위 이혼소송 문제<br />7일 만에 증거 수집 후 완벽해결</strong></div>
-          </div>
-          <button className="button button-blue" type="button" onClick={goToConsultation} data-reveal="up">지금 바로 해결하기</button>
-        </div>
-      </section>
-
       <section className="reasons-section section" aria-labelledby="reasons-title">
         <div className="page-shell">
           <div className="section-heading centered" data-reveal="up">
@@ -375,13 +463,20 @@ function App() {
             <h2 id="process-title">이렇게 진행됩니다</h2>
             <p>논스톱 해결 진행 정성은 가능합니다!</p>
           </div>
-          <div className="process-grid">
-            {steps.map((step, index) => (
-              <article key={step.title} data-reveal="up" style={{ '--reveal-delay': `${(index % 2) * 100}ms` } as CSSProperties}>
-                <div className="step-image"><img src={`/images/step-${index + 1}.webp`} alt="" /><span>{index + 1}</span></div>
-                <div className="step-copy"><h3>{step.title}</h3><p>{step.description}</p></div>
-              </article>
-            ))}
+          <div className="process-carousel" data-reveal="up" role="region" aria-roledescription="carousel" aria-label="진행 절차">
+            <div className="process-track" ref={processTrackRef} tabIndex={0}>
+              {steps.map((step, index) => (
+                <article key={step.title} role="group" aria-roledescription="slide" aria-label={`${index + 1} / ${steps.length}`}>
+                  <div className="step-image"><img src={`/images/step-${index + 1}.webp`} alt="" /><span>{index + 1}</span></div>
+                  <div className="step-copy"><h3>{step.title}</h3><p>{step.description}</p></div>
+                </article>
+              ))}
+            </div>
+            <div className="process-carousel-controls">
+              <button type="button" onClick={() => scrollProcess(-1)} aria-label="이전 진행 단계">←</button>
+              <span>옆으로 넘겨 확인하세요</span>
+              <button type="button" onClick={() => scrollProcess(1)} aria-label="다음 진행 단계">→</button>
+            </div>
           </div>
         </div>
       </section>
@@ -411,7 +506,13 @@ function App() {
         <div className="page-shell"><Brand /><p>상담 내용과 개인정보는 안전하게 보호됩니다.</p><small>© 2026 탐정법인 정성. All rights reserved.</small></div>
       </footer>
 
-      <button className="mobile-sticky-cta" type="button" onClick={goToConsultation}>무료 비밀상담</button>
+      <button className="floating-consultation" type="button" onClick={goToConsultation} aria-label="원클릭 상담 신청 영역으로 이동">
+        <span className="floating-consultation-icon"><ConsultationIcon /></span>
+      </button>
+      <button className="mobile-sticky-cta" type="button" onClick={goToConsultation}>
+        <ConsultationIcon />
+        <span>원클릭 상담</span>
+      </button>
     </main>
   )
 }

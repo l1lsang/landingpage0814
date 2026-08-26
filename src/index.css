@@ -1,13 +1,17 @@
 :root {
-  --navy: #23254c;
-  --blue: #1679f5;
-  --yellow: #ffbd2f;
-  --red: #ee3849;
-  --text: #22242d;
-  --text-muted: #626779;
+  color-scheme: only light;
+  --navy: #4b1118;
+  --blue: #7a1f29;
+  --yellow: #f7c956;
+  --red: #a63b45;
+  --text: #2e2325;
+  --text-muted: #75686b;
+  --page-bg: #fdf9f9;
+  --surface-soft: #f8eff0;
+  --border-soft: #eadbdd;
   font-family: Pretendard, 'Pretendard Variable', 'Noto Sans KR', 'Apple SD Gothic Neo', Inter, system-ui, sans-serif;
   color: var(--text);
-  background: #fff;
+  background: var(--page-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -19,6 +23,8 @@
 }
 
 html {
+  color-scheme: only light;
+  background: var(--page-bg);
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
 }
@@ -27,6 +33,8 @@ body {
   min-width: 320px;
   margin: 0;
   overflow-x: hidden;
+  color: var(--text);
+  background: var(--page-bg);
 }
 
 button,
