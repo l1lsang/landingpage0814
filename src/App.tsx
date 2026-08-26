@@ -92,6 +92,54 @@ const steps = [
   },
 ]
 
+const legalExperts = [
+  {
+    name: '서지원 변호사',
+    image: '/images/naran-seo-jiwon.jpg',
+    career: '대한변협 인증 형사법·부동산 전문변호사',
+  },
+  {
+    name: '최지연 변호사',
+    image: '/images/naran-choi-jiyeon.jpg',
+    career: '서울도봉·강북경찰서 경미범죄 심사위원',
+  },
+  {
+    name: '정이든 변호사',
+    image: '/images/naran-jung-ideun.jpg',
+    career: '대한변협 인증 부동산 전문변호사',
+  },
+  {
+    name: '문인정 변호사',
+    image: '/images/naran-moon-injeong.png',
+    career: '대한변협 인증 형사법 전문변호사',
+  },
+  {
+    name: '강지수 변호사',
+    image: '/images/naran-kang-jisu.jpg',
+    career: '변리사 · 제주대학교 법학전문대학원',
+  },
+  {
+    name: '강수은 변호사',
+    image: '/images/naran-kang-sueun.jpg',
+    career: '상간 손해배상 사건 승소 수행 · 영어·일본어',
+  },
+  {
+    name: '이정민 변호사',
+    image: '/images/naran-lee-jungmin.jpg',
+    career: '경기도교육청 교직원법률지원 변호사',
+  },
+  {
+    name: '손수정 변호사',
+    image: '/images/naran-son-sujeong.png',
+    career: '대법원 국선변호인 · 경기도 법률상담위원',
+  },
+  {
+    name: '황용상 고문',
+    image: '/images/naran-hwang-yongsang.jpg',
+    career: '경찰 재직 35년 · 수사업무 30년',
+  },
+]
+
 type ConsultationForm = {
   name: string
   phone: string
@@ -218,6 +266,8 @@ function App() {
   const [submitMessage, setSubmitMessage] = useState('')
   const [rollingKeywordIndex, setRollingKeywordIndex] = useState(0)
   const [caseDateReference, setCaseDateReference] = useState(() => new Date())
+  const expertTrackRef = useRef<HTMLDivElement>(null)
+  const expertResetTimerRef = useRef<number | null>(null)
   const processTrackRef = useRef<HTMLDivElement>(null)
 
   useScrollReveal()
@@ -244,6 +294,43 @@ function App() {
   const goToConsultation = () => {
     document.querySelector('#consultation')?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const scrollExperts = useCallback(() => {
+    const track = expertTrackRef.current
+    const card = track?.querySelector<HTMLElement>('article')
+    if (!track || !card) return
+
+    const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0
+    const step = card.offsetWidth + gap
+    const currentIndex = Math.round(track.scrollLeft / step) % legalExperts.length
+    const nextIndex = currentIndex + 1
+
+    track.scrollTo({ left: nextIndex * step, behavior: 'smooth' })
+
+    if (nextIndex === legalExperts.length) {
+      expertResetTimerRef.current = window.setTimeout(() => {
+        track.classList.add('is-loop-resetting')
+        track.scrollTo({ left: 0, behavior: 'auto' })
+        void track.offsetWidth
+        track.classList.remove('is-loop-resetting')
+      }, 650)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const interval = window.setInterval(() => {
+      const track = expertTrackRef.current
+      if (!track || document.hidden || track.matches(':hover')) return
+      scrollExperts()
+    }, 1500)
+
+    return () => {
+      window.clearInterval(interval)
+      if (expertResetTimerRef.current !== null) window.clearTimeout(expertResetTimerRef.current)
+    }
+  }, [scrollExperts])
 
   const scrollProcess = useCallback((direction: -1 | 1) => {
     const track = processTrackRef.current
@@ -377,6 +464,41 @@ function App() {
                 ))}
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="experts-section section" aria-labelledby="experts-title">
+        <div className="page-shell">
+          <div className="section-heading centered" data-reveal="up">
+            <p className="section-kicker">LEGAL ADVISORY PARTNERS</p>
+            <h2 id="experts-title">함께하는 법률 전문가</h2>
+            <p>전문 변호사와 고문이 함께합니다.</p>
+          </div>
+          <div className="experts-carousel" data-reveal="up" role="region" aria-roledescription="carousel" aria-label="변호사 및 고문 소개">
+            <div className="experts-track" ref={expertTrackRef}>
+              {[...legalExperts, ...legalExperts].map((expert, index) => {
+                const isDuplicate = index >= legalExperts.length
+
+                return (
+                  <article
+                    className={expert.name.endsWith('고문') ? 'expert-card advisor' : 'expert-card'}
+                    key={`${expert.name}-${index}`}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={isDuplicate ? undefined : `${index + 1} / ${legalExperts.length}`}
+                    aria-hidden={isDuplicate}
+                  >
+                    <img src={expert.image} alt={isDuplicate ? '' : expert.name} />
+                    <div className="expert-card-copy">
+                      <h3>{expert.name}</h3>
+                      <p>{expert.career}</p>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+            <p className="experts-carousel-hint">1.5초마다 다음 전문가를 소개합니다</p>
           </div>
         </div>
       </section>

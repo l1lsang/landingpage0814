@@ -519,6 +519,90 @@
   background: #f5ecee;
 }
 
+.experts-section {
+  min-height: 820px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+}
+
+.experts-carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.experts-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 72px) / 4);
+  gap: 24px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: 8px 4px 22px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.experts-track::-webkit-scrollbar {
+  display: none;
+}
+
+.experts-track.is-loop-resetting {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
+.expert-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgb(75 17 24 / 9%);
+  scroll-snap-align: start;
+}
+
+.expert-card.advisor {
+  border-color: #d8b8bc;
+}
+
+.expert-card > img {
+  width: 100%;
+  aspect-ratio: 7 / 10;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+  background: #eee7e9;
+}
+
+.expert-card-copy {
+  padding: 17px 18px 20px;
+}
+
+.expert-card-copy h3 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 1.08rem;
+  letter-spacing: -0.035em;
+}
+
+.expert-card-copy p {
+  min-height: 2.9em;
+  margin: 7px 0 0;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.experts-carousel-hint {
+  margin: 4px 0 0;
+  color: #948286;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-align: center;
+}
+
 .insight-section {
   background: var(--page-bg);
 }
@@ -1114,6 +1198,11 @@
     margin-bottom: 42px;
   }
 
+  .experts-track {
+    grid-auto-columns: calc((100% - 36px) / 3);
+    gap: 18px;
+  }
+
   .award-strip {
     grid-template-columns: 1fr auto;
     gap: 10px;
@@ -1259,6 +1348,7 @@
   .section-heading,
   .proof-cards,
   .case-board,
+  .experts-carousel,
   .insight-grid,
   .reason-list,
   .process-carousel,
@@ -1432,6 +1522,39 @@
 
   .case-board li time {
     flex: 0 0 auto;
+  }
+
+  .experts-section {
+    min-height: auto;
+  }
+
+  .experts-track {
+    grid-auto-columns: 74%;
+    gap: 14px;
+    margin-inline: -14px;
+    padding-inline: 14px;
+    scroll-padding-inline: 14px;
+  }
+
+  .expert-card {
+    border-radius: 22px;
+  }
+
+  .expert-card > img {
+    aspect-ratio: 4 / 5;
+  }
+
+  .expert-card-copy {
+    padding: 15px 16px 17px;
+  }
+
+  .expert-card-copy h3 {
+    font-size: 1rem;
+  }
+
+  .expert-card-copy p {
+    min-height: 2.8em;
+    font-size: 0.71rem;
   }
 
   .insight-grid {
