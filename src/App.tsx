@@ -498,7 +498,7 @@ function App() {
                 )
               })}
             </div>
-            <p className="experts-carousel-hint">1.5초마다 다음 전문가를 소개합니다</p>
+            
           </div>
         </div>
       </section>
