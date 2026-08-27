@@ -255,7 +255,7 @@ main {
 
 .hero-content h1 {
   margin: 18px 0 22px;
-  color: #c77b86;
+  color: var(--blue);
   font-size: clamp(3rem, 5.5vw, 5rem);
   line-height: 1.18;
   letter-spacing: -0.075em;
@@ -1225,6 +1225,34 @@ main {
 
 .motion-ready .button[data-reveal].is-visible:hover {
   transform: translateY(-2px);
+}
+
+@media (min-width: 901px) {
+  .section {
+    min-height: 0;
+    padding-block: 25px;
+  }
+
+  .section-heading {
+    margin-bottom: 32px;
+  }
+
+  .experience-section {
+    padding-block: 25px;
+  }
+
+  .experts-section {
+    min-height: 0;
+    padding-top: 25px;
+  }
+
+  .coverage-section {
+    min-height: 0;
+  }
+
+  .hero-section {
+    padding-bottom: 25px;
+  }
 }
 
 @media (max-width: 900px) {
