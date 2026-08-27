@@ -204,13 +204,6 @@ main {
   isolation: isolate;
 }
 
-.hero-card::after {
-  content: '';
-  position: absolute;
-  inset: -4%;
-  pointer-events: none;
-}
-
 .hero-background {
   position: absolute;
   z-index: -2;
@@ -250,11 +243,6 @@ main {
   .hero-mobile-background {
     display: block;
   }
-}
-
-.hero-card::after {
-  z-index: -1;
-  background: linear-gradient(rgb(78 47 49 / 28%), rgb(49 27 32 / 48%));
 }
 
 .hero-content {
