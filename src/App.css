@@ -1588,6 +1588,10 @@ main {
     white-space: nowrap;
   }
 
+  .coverage-section {
+    padding-bottom: 20px;
+  }
+
   .coverage-map {
     max-height: 300px;
     transform: translateX(-22%);
