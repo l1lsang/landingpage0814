@@ -1433,6 +1433,10 @@ main {
 }
 
 @media (max-width: 620px) {
+  .hero-title-line-top {
+    transform: translateX(-3.2%);
+  }
+
   .motion-ready [data-reveal='left'],
   .motion-ready [data-reveal='right'] {
     transform: translate3d(0, 32px, 0);
