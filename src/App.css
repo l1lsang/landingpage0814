@@ -93,6 +93,7 @@ main {
 }
 
 .button-secondary {
+  border-radius: 16px;
   color: var(--navy);
   background: linear-gradient(135deg, #e7b8bf, #cb818c);
 }
