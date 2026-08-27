@@ -420,7 +420,7 @@ function App() {
               void event.currentTarget.play().catch(() => undefined)
             }}
           >
-            <source src="/images/building-desktop.mp4" type="video/mp4" />
+            <source src="/images/building.mp4" type="video/mp4" />
           </video>
           <img
             className="hero-mobile-background"
