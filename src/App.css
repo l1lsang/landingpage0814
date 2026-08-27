@@ -219,13 +219,13 @@ main {
   width: 108%;
   height: 108%;
   object-fit: cover;
-  filter: saturate(0.62) sepia(0.04) brightness(1.14) contrast(1.02);
   pointer-events: none;
-  animation: hero-breathe 12s ease-in-out infinite alternate;
 }
 
 .hero-mobile-background {
   display: none;
+  filter: saturate(0.62) sepia(0.04) brightness(1.14) contrast(1.02);
+  animation: hero-breathe 12s ease-in-out infinite alternate;
 }
 
 .hero-background::-webkit-media-controls,
