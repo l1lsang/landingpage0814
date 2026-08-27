@@ -3,6 +3,12 @@
   margin-inline: auto;
 }
 
+main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 .section {
   min-height: 100svh;
   display: flex;
@@ -1329,6 +1335,11 @@
 }
 
 @media (max-width: 620px) {
+  .motion-ready [data-reveal='left'],
+  .motion-ready [data-reveal='right'] {
+    transform: translate3d(0, 32px, 0);
+  }
+
   .page-shell {
     width: min(100% - 28px, 520px);
   }
@@ -1412,16 +1423,21 @@
   }
 
   .hero-section {
+    width: 100%;
+    margin-inline: 0;
     padding-bottom: 54px;
   }
 
   .hero-card {
+    grid-template-columns: minmax(0, 1fr);
     min-height: 650px;
     border-radius: 0 0 42px 42px;
   }
 
   .hero-content {
     width: calc(100% - 32px);
+    min-width: 0;
+    max-width: calc(100% - 32px);
   }
 
   .hero-content h1 {
@@ -1477,6 +1493,11 @@
   .coverage-map {
     max-height: 300px;
     transform: translateX(-22%);
+  }
+
+  .coverage-map-visual {
+    overflow: hidden;
+    overflow: clip;
   }
 
   .coverage-map-visual .map-points {
