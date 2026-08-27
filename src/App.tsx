@@ -399,7 +399,6 @@ function App() {
           </div>
           <div className="header-trust-marks">
             <img className="header-award-badge" src="/images/award-badge.png" alt="2024 대한민국 소비자평가 1위 브랜드 대상" />
-            <span className="security-badge">최고등급 보안인증</span>
           </div>
         </div>
       </header>
