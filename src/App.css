@@ -89,12 +89,12 @@ main {
 
 .button-primary {
   color: #fff;
-  background: linear-gradient(135deg, #8f2833, #65151d);
+  background: #a6535f;
 }
 
 .button-secondary {
   color: #fff;
-  background: linear-gradient(135deg, #8f2833, #65151d);
+  background: #a6535f;
 }
 
 .button-blue {
@@ -102,7 +102,7 @@ main {
   width: fit-content;
   margin: 46px auto 0;
   color: #fff;
-  background: linear-gradient(135deg, #8f2833, #65151d);
+  background: #a6535f;
 }
 
 .site-header {
@@ -1011,7 +1011,7 @@ main {
   margin: 30px auto 0;
   border-radius: 16px;
   color: #fff;
-  background: linear-gradient(135deg, #8f2833, #65151d);
+  background: #a6535f;
 }
 
 .submit-button:disabled {
@@ -1083,7 +1083,7 @@ main {
   border-radius: 50%;
   padding: 0;
   color: #fff;
-  background: linear-gradient(135deg, #8f2833, #65151d);
+  background: #a6535f;
   box-shadow: 0 16px 34px rgb(122 31 41 / 28%), 0 4px 12px rgb(60 13 19 / 16%);
   font: inherit;
   font-weight: 900;
@@ -1787,7 +1787,7 @@ main {
     border: 0;
     border-radius: 16px;
     color: #fff;
-    background: linear-gradient(135deg, #8f2833, #65151d);
+    background: #a6535f;
     box-shadow: 0 12px 30px rgb(122 31 41 / 26%);
     font: inherit;
     font-weight: 900;
