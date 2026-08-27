@@ -94,7 +94,7 @@ main {
 
 .button-secondary {
   color: var(--navy);
-  background: #ead8c2;
+  background: linear-gradient(135deg, #e7b8bf, #cb818c);
 }
 
 .button-blue {
@@ -200,7 +200,7 @@ main {
   min-height: calc(100svh - 188px);
   display: flex;
   align-items: stretch;
-  padding-bottom: 86px;
+  padding-bottom: 32px;
   scroll-snap-align: start;
 }
 
@@ -250,10 +250,12 @@ main {
 
 .hero-content .eyebrow {
   color: #fff;
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
 }
 
 .hero-content h1 {
   margin: 18px 0 22px;
+  color: #c77b86;
   font-size: clamp(3rem, 5.5vw, 5rem);
   line-height: 1.18;
   letter-spacing: -0.075em;
@@ -451,6 +453,8 @@ main {
 
 .experience-section {
   border-top: 1px solid var(--border-soft);
+  padding-top: 72px;
+  padding-bottom: 72px;
 }
 
 .experience-section .section-heading h2 {
@@ -549,6 +553,7 @@ main {
 .experts-section {
   min-height: 820px;
   border-top: 1px solid var(--border-soft);
+  padding-top: 72px;
 }
 
 .experts-carousel {
@@ -635,21 +640,27 @@ main {
   gap: 42px;
 }
 
+.insight-grid + .insight-grid {
+  margin-top: 32px;
+}
+
 .insight-grid > img,
 .insight-grid article {
   width: 100%;
-  min-height: 360px;
   border-radius: 34px;
 }
 
 .insight-grid > img {
+  height: 320px;
   object-fit: cover;
-  filter: saturate(0.75);
+  object-position: center top;
 }
 
 .insight-grid article {
   position: relative;
-  padding: 36px;
+  height: 320px;
+  overflow: hidden;
+  padding: 30px;
   color: var(--navy);
   background: #f8f1f2;
 }
@@ -661,21 +672,36 @@ main {
 }
 
 .insight-grid h3 {
-  margin: 8px 0 22px;
-  font-size: 1.48rem;
-  line-height: 1.55;
+  margin: 6px 0 14px;
+  font-size: 1.32rem;
+  line-height: 1.4;
+}
+
+.insight-grid h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.insight-grid h3 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .insight-grid p {
   margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
   color: #5c6174;
-  line-height: 1.8;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .insight-grid time {
   position: absolute;
-  right: 36px;
-  bottom: 30px;
+  right: 30px;
+  bottom: 24px;
 }
 
 .award-marquee {
@@ -1210,6 +1236,15 @@ main {
     padding-block: 82px;
   }
 
+  .experience-section {
+    padding-top: 64px;
+    padding-bottom: 56px;
+  }
+
+  .experts-section {
+    padding-top: 56px;
+  }
+
   .section-heading {
     margin-bottom: 42px;
   }
@@ -1259,7 +1294,7 @@ main {
 
   .hero-section {
     width: 100%;
-    padding-bottom: 66px;
+    padding-bottom: 28px;
   }
 
   .hero-card {
@@ -1311,11 +1346,15 @@ main {
 
   .insight-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 
-  .insight-grid > img,
+  .insight-grid > img {
+    height: 240px;
+  }
+
   .insight-grid article {
-    min-height: 300px;
+    height: 250px;
   }
 
   .award-track {
@@ -1358,6 +1397,15 @@ main {
 
   .section {
     padding-block: 68px;
+  }
+
+  .experience-section {
+    padding-top: 52px;
+    padding-bottom: 44px;
+  }
+
+  .experts-section {
+    padding-top: 44px;
   }
 
   .section-heading h2,
@@ -1437,7 +1485,7 @@ main {
   .hero-section {
     width: 100%;
     margin-inline: 0;
-    padding-bottom: 54px;
+    padding-bottom: 20px;
   }
 
   .hero-card {
@@ -1593,34 +1641,48 @@ main {
     gap: 18px;
   }
 
+  .insight-grid + .insight-grid {
+    margin-top: 22px;
+  }
+
   .insight-grid > img,
   .insight-grid article {
-    min-height: 250px;
     border-radius: 24px;
   }
 
+  .insight-grid > img {
+    height: 165px;
+  }
+
   .insight-grid article {
+    height: 220px;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    padding: 24px;
+    padding: 20px;
   }
 
   .insight-grid h3 {
-    margin: 6px 0 14px;
-    font-size: 1.22rem;
-    line-height: 1.45;
+    overflow: hidden;
+    display: -webkit-box;
+    margin: 5px 0 10px;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 
   .insight-grid p {
-    font-size: 0.92rem;
-    line-height: 1.65;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    -webkit-line-clamp: 2;
   }
 
   .insight-grid time {
     position: static;
     align-self: flex-end;
-    margin-top: 22px;
+    margin-top: auto;
+    padding-top: 10px;
   }
 
   .award-marquee {

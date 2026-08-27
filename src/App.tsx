@@ -534,12 +534,21 @@ function App() {
             <h2 id="insight-title">탐정법인 정성 INSIGHT</h2>
           </div>
           <div className="insight-grid" data-reveal="up">
+            <img src="/images/스크린샷 2026-08-27 144609.png" alt="탐정법인 정성 핀테크 분야 특화 전담 부서 운영 경북신문 기사" />
+            <article>
+              <span>NEWS</span>
+              <h3><a href="https://www.kbsm.net/news/view.php?idx=456482" target="_blank" rel="noreferrer">[경북신문] 탐정법인 정성, 핀테크 분야 특화 전담 부서 운영으로 피해 복구 앞장</a></h3>
+              <p>탐정법인 정성이 핀테크 사기 전담 부서를 통해 투자 사기 피해 복구와 예방을 위한 맞춤형 조사·증거 수집을 지원합니다.</p>
+              <time dateTime="2024-12-05">2024.12.05</time>
+            </article>
+          </div>
+          <div className="insight-grid" data-reveal="up">
             <img src="/images/press.webp" alt="탐정사무소 정성 소비자 선호 브랜드 수상 보도자료" />
             <article>
               <span>NEWS</span>
               <h3>[이뉴스투데이] “대한민국 소비자 선호 브랜드 1위” 수상</h3>
               <p>탐정사무소 정성 대표는 “진심으로 감사드리며 더 나은 미래를 함께 만들어가겠다”고 수상 소감을 전했습니다.</p>
-              <time>2024.10.15</time>
+              <time dateTime="2024-10-15">2024.10.15</time>
             </article>
           </div>
           <div className="award-marquee" data-reveal="up" aria-label="탐정법인 정성 수상 인증">
