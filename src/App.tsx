@@ -424,7 +424,7 @@ function App() {
           </video>
           <img
             className="hero-mobile-background"
-            src="/images/building-mobile.webp"
+            src="/images/building-mobile-ultra.webp"
             alt=""
             aria-hidden="true"
           />
