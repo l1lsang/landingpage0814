@@ -88,13 +88,13 @@ main {
 }
 
 .button-primary {
-  color: var(--navy);
-  background: linear-gradient(135deg, var(--cta-rose-light), var(--cta-rose));
+  color: #fff;
+  background: linear-gradient(135deg, #8f2833, #65151d);
 }
 
 .button-secondary {
-  color: var(--navy);
-  background: linear-gradient(135deg, var(--cta-rose-light), var(--cta-rose));
+  color: #fff;
+  background: linear-gradient(135deg, #8f2833, #65151d);
 }
 
 .button-blue {
@@ -1082,8 +1082,8 @@ main {
   border: 0;
   border-radius: 50%;
   padding: 0;
-  color: var(--navy);
-  background: linear-gradient(135deg, var(--cta-rose-light), var(--cta-rose));
+  color: #fff;
+  background: linear-gradient(135deg, #8f2833, #65151d);
   box-shadow: 0 16px 34px rgb(122 31 41 / 28%), 0 4px 12px rgb(60 13 19 / 16%);
   font: inherit;
   font-weight: 900;
@@ -1103,7 +1103,7 @@ main {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--navy);
+  color: #fff;
 }
 
 .floating-consultation svg,
@@ -1786,8 +1786,8 @@ main {
     gap: 9px;
     border: 0;
     border-radius: 16px;
-    color: var(--navy);
-    background: linear-gradient(135deg, var(--cta-rose-light), var(--cta-rose));
+    color: #fff;
+    background: linear-gradient(135deg, #8f2833, #65151d);
     box-shadow: 0 12px 30px rgb(122 31 41 / 26%);
     font: inherit;
     font-weight: 900;
