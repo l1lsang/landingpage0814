@@ -414,6 +414,9 @@ function App() {
 
       <section className="hero-section page-shell" aria-labelledby="hero-title" data-reveal="scale">
         <div className="hero-card">
+          <video className="hero-background" autoPlay muted loop playsInline aria-hidden="true">
+            <source src="/images/building.mp4" type="video/mp4" />
+          </video>
           <div className="hero-content">
             <p className="eyebrow">외도 증거수집 전문 탐정법인</p>
             <h1 id="hero-title">
@@ -445,10 +448,10 @@ function App() {
             <p>신뢰할 수 있는 경력의 전문가들이 팀을 꾸려<br />효과적으로 증거를 수집하며 해결하고 있습니다.</p>
           </div>
           <div className="proof-cards" data-reveal="up">
-            <article style={{ backgroundImage: "url('/images/proof-handshake.webp')" }}>
+            <article style={{ backgroundImage: "url('/images/proof-handshake-neutral.webp')" }}>
               <span>만족도</span><strong><AnimatedNumber value={99} />%</strong>
             </article>
-            <article style={{ backgroundImage: "url('/images/proof-office.webp')" }}>
+            <article style={{ backgroundImage: "url('/images/proof-office-neutral.webp')" }}>
               <span>진행건수</span><strong><AnimatedNumber value={15087} />+</strong>
             </article>
           </div>
