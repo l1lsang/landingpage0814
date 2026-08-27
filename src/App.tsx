@@ -430,7 +430,7 @@ function App() {
           </div>
           <div className="hero-metrics" aria-label="주요 실적">
             <div><strong>상담건수</strong><span><b><AnimatedNumber value={15087} /></b> +</span></div>
-            <div><strong>만족도</strong><span><b><AnimatedNumber value={99} /></b> %</span></div>
+            <div><strong>만족도</strong><span><b><AnimatedNumber value={98} /></b> %</span></div>
           </div>
         </div>
       </section>
