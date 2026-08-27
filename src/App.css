@@ -131,8 +131,8 @@ main {
 }
 
 .award-strip img {
-  width: 168px;
-  height: 48px;
+  width: 300px;
+  height: auto;
   object-fit: contain;
 }
 
@@ -201,7 +201,7 @@ main {
   min-height: calc(100svh - 188px);
   display: flex;
   align-items: stretch;
-  padding-bottom: 32px;
+  padding-bottom: 0;
   scroll-snap-align: start;
 }
 
@@ -235,6 +235,16 @@ main {
   filter: saturate(0.62) sepia(0.04) brightness(1.14) contrast(1.02);
   pointer-events: none;
   animation: hero-breathe 12s ease-in-out infinite alternate;
+}
+
+.hero-background::-webkit-media-controls,
+.hero-background::-webkit-media-controls-enclosure,
+.hero-background::-webkit-media-controls-panel,
+.hero-background::-webkit-media-controls-play-button,
+.hero-background::-webkit-media-controls-start-playback-button,
+.hero-background::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  -webkit-appearance: none;
 }
 
 .hero-card::after {
@@ -291,7 +301,7 @@ main {
 }
 
 .hero-description {
-  margin: clamp(32px, 3vw, 42px) 0 0;
+  margin: clamp(48px, 5vw, 72px) 0 0;
   font-size: clamp(1.05rem, 2vw, 1.42rem);
   font-weight: 500;
 }
@@ -454,7 +464,7 @@ main {
 
 .experience-section {
   border-top: 1px solid var(--border-soft);
-  padding-top: 72px;
+  padding-top: 40px;
   padding-bottom: 72px;
 }
 
@@ -1231,7 +1241,7 @@ main {
 @media (min-width: 901px) {
   .section {
     min-height: 0;
-    padding-block: 36px;
+    padding-block: 50px;
   }
 
   .section-heading {
@@ -1239,12 +1249,13 @@ main {
   }
 
   .experience-section {
-    padding-block: 36px;
+    padding-top: 40px;
+    padding-bottom: 50px;
   }
 
   .experts-section {
     min-height: 0;
-    padding-top: 36px;
+    padding-top: 50px;
   }
 
   .coverage-section {
@@ -1252,7 +1263,7 @@ main {
   }
 
   .hero-section {
-    padding-bottom: 36px;
+    padding-bottom: 0;
   }
 }
 
@@ -1266,7 +1277,7 @@ main {
   }
 
   .experience-section {
-    padding-top: 64px;
+    padding-top: 36px;
     padding-bottom: 56px;
   }
 
@@ -1284,7 +1295,7 @@ main {
   }
 
   .award-strip {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
     padding-inline: 16px;
   }
@@ -1294,7 +1305,7 @@ main {
   }
 
   .award-strip img {
-    width: 150px;
+    width: 240px;
   }
 
   .header-inner {
@@ -1323,7 +1334,7 @@ main {
 
   .hero-section {
     width: 100%;
-    padding-bottom: 28px;
+    padding-bottom: 0;
   }
 
   .hero-card {
@@ -1429,7 +1440,7 @@ main {
   }
 
   .experience-section {
-    padding-top: 52px;
+    padding-top: 28px;
     padding-bottom: 44px;
   }
 
@@ -1467,8 +1478,7 @@ main {
   }
 
   .award-strip img {
-    width: 118px;
-    height: 38px;
+    width: 170px;
   }
 
   .award-strip button {
@@ -1514,7 +1524,7 @@ main {
   .hero-section {
     width: 100%;
     margin-inline: 0;
-    padding-bottom: 20px;
+    padding-bottom: 0;
   }
 
   .hero-card {

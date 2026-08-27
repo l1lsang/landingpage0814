@@ -409,7 +409,21 @@ function App() {
 
       <section className="hero-section page-shell" aria-labelledby="hero-title" data-reveal="scale">
         <div className="hero-card">
-          <video className="hero-background" autoPlay muted loop playsInline aria-hidden="true">
+          <video
+            className="hero-background"
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls={false}
+            disablePictureInPicture
+            preload="auto"
+            aria-hidden="true"
+            onCanPlay={(event) => {
+              event.currentTarget.muted = true
+              void event.currentTarget.play().catch(() => undefined)
+            }}
+          >
             <source src="/images/building.mp4" type="video/mp4" />
           </video>
           <div className="hero-content">
@@ -444,7 +458,7 @@ function App() {
           </div>
           <div className="proof-cards" data-reveal="up">
             <article style={{ backgroundImage: "url('/images/proof-handshake-neutral.webp')" }}>
-              <span>만족도</span><strong><AnimatedNumber value={99} />%</strong>
+              <span>만족도</span><strong><AnimatedNumber value={98} />%</strong>
             </article>
             <article style={{ backgroundImage: "url('/images/proof-office-neutral.webp')" }}>
               <span>진행건수</span><strong><AnimatedNumber value={15087} />+</strong>
