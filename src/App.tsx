@@ -114,11 +114,6 @@ const legalExperts = [
     career: '대한변협 인증 형사법 전문변호사',
   },
   {
-    name: '강지수 변호사',
-    image: '/images/naran-kang-jisu.jpg',
-    career: '변리사 · 제주대학교 법학전문대학원',
-  },
-  {
     name: '강수은 변호사',
     image: '/images/naran-kang-sueun.jpg',
     career: '상간 손해배상 사건 승소 수행 · 영어·일본어',
