@@ -181,13 +181,13 @@ main {
 }
 
 .security-badge {
-  border: 4px solid #4b1118;
-  border-radius: 16px;
-  padding: 12px 28px;
+  border: 0;
+  border-radius: 7px;
+  padding: 7px 14px;
   color: #fff;
   background: #7a1f29;
-  box-shadow: inset 0 0 0 2px #b98289;
-  font-size: 1.1rem;
+  box-shadow: none;
+  font-size: 0.78rem;
   font-weight: 800;
 }
 
@@ -259,6 +259,7 @@ main {
 .hero-content .eyebrow {
   color: #fff;
   font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  font-weight: 400;
 }
 
 .hero-content h1 {
@@ -640,6 +641,10 @@ main {
   font-size: 0.76rem;
   font-weight: 700;
   text-align: center;
+}
+
+.insight-section .section-heading {
+  margin-bottom: clamp(46px, 5vw, 72px);
 }
 
 .insight-grid {
@@ -1323,10 +1328,9 @@ main {
   }
 
   .security-badge {
-    border-width: 3px;
-    border-radius: 13px;
-    padding: 9px 14px;
-    font-size: 0.82rem;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.68rem;
   }
 
   .hero-section {
@@ -1524,10 +1528,8 @@ main {
   }
 
   .security-badge {
-    border-width: 2px;
-    padding: 7px 9px;
-    font-size: 0.68rem;
-    box-shadow: inset 0 0 0 1px #b98289;
+    padding: 5px 8px;
+    font-size: 0.58rem;
   }
 
   .hero-section {
