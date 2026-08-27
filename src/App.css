@@ -228,20 +228,21 @@ main {
   width: 108%;
   height: 108%;
   object-fit: cover;
-  filter: saturate(0.58) sepia(0.05) brightness(1.08) contrast(1.02);
+  filter: saturate(0.62) sepia(0.04) brightness(1.14) contrast(1.02);
   pointer-events: none;
   animation: hero-breathe 12s ease-in-out infinite alternate;
 }
 
 .hero-card::after {
   z-index: -1;
-  background: linear-gradient(rgb(78 47 49 / 40%), rgb(49 27 32 / 62%));
+  background: linear-gradient(rgb(78 47 49 / 28%), rgb(49 27 32 / 48%));
 }
 
 .hero-content {
   width: min(90%, 720px);
   padding-bottom: 78px;
   text-align: center;
+  text-shadow: 0 2px 14px rgb(30 12 16 / 48%);
 }
 
 .hero-content .eyebrow {
