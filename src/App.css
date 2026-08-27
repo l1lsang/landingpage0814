@@ -222,14 +222,14 @@
   width: 108%;
   height: 108%;
   object-fit: cover;
-  filter: saturate(0.76) contrast(1.05);
+  filter: saturate(0.68) sepia(0.08) contrast(1.03);
   pointer-events: none;
   animation: hero-breathe 12s ease-in-out infinite alternate;
 }
 
 .hero-card::after {
   z-index: -1;
-  background: linear-gradient(rgb(58 38 41 / 66%), rgb(31 20 24 / 86%));
+  background: linear-gradient(rgb(78 47 49 / 58%), rgb(49 27 32 / 80%));
 }
 
 .hero-content {
