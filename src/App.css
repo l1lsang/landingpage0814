@@ -483,7 +483,7 @@ main {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: rgb(75 17 24 / 72%);
+  background: rgb(75 17 24 / 50%);
 }
 
 .proof-cards span,
