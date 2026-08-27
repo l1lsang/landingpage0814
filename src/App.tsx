@@ -163,10 +163,6 @@ function Brand() {
   )
 }
 
-function ArrowIcon() {
-  return <span aria-hidden="true">→</span>
-}
-
 function ConsultationIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -396,14 +392,15 @@ function App() {
   return (
     <main id="top">
       <header className="site-header">
-        <div className="award-strip">
-          <p>대한민국 외도 증거 수집 전문 | 탐정법인 정성</p>
-          <img src="/images/award-badge.png" alt="2024 대한민국 소비자평가 1위 브랜드 대상" />
-          <button type="button" onClick={goToConsultation}>무료 익명상담 바로가기 <ArrowIcon /></button>
-        </div>
         <div className="header-inner page-shell">
-          <Brand />
-          <span className="security-badge">최고등급 보안인증</span>
+          <div className="header-brand-block">
+            <Brand />
+            <p className="header-tagline">대한민국 외도 증거 수집 전문 | 탐정법인 정성</p>
+          </div>
+          <div className="header-trust-marks">
+            <img className="header-award-badge" src="/images/award-badge.png" alt="2024 대한민국 소비자평가 1위 브랜드 대상" />
+            <span className="security-badge">최고등급 보안인증</span>
+          </div>
         </div>
       </header>
 
