@@ -211,7 +211,8 @@ main {
   pointer-events: none;
 }
 
-.hero-background {
+.hero-background,
+.hero-mobile-background {
   position: absolute;
   z-index: -2;
   inset: -4%;
@@ -223,6 +224,10 @@ main {
   animation: hero-breathe 12s ease-in-out infinite alternate;
 }
 
+.hero-mobile-background {
+  display: none;
+}
+
 .hero-background::-webkit-media-controls,
 .hero-background::-webkit-media-controls-enclosure,
 .hero-background::-webkit-media-controls-panel,
@@ -231,6 +236,16 @@ main {
 .hero-background::-webkit-media-controls-overlay-play-button {
   display: none !important;
   -webkit-appearance: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hero-background {
+    display: none;
+  }
+
+  .hero-mobile-background {
+    display: block;
+  }
 }
 
 .hero-card::after {
