@@ -93,8 +93,8 @@ main {
 }
 
 .button-secondary {
-  color: #fff;
-  background: #a6535f;
+  color: var(--navy);
+  background: #ead8c2;
 }
 
 .button-blue {
@@ -194,6 +194,9 @@ main {
 }
 
 .hero-section {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
   min-height: calc(100svh - 188px);
   display: flex;
   align-items: stretch;
@@ -208,7 +211,7 @@ main {
   overflow: hidden;
   display: grid;
   place-items: center;
-  border-radius: 84px 84px 84px 0;
+  border-radius: 0;
   color: #fff;
   background: #4b1118;
   isolation: isolate;
@@ -436,6 +439,14 @@ main {
   box-shadow: 0 0 0 0 rgb(22 140 255 / 68%), 0 0 13px 3px rgb(50 158 255 / 82%);
   transform: translate(-50%, -50%);
   animation: map-point-pulse 1.8s ease-out var(--point-delay) infinite;
+}
+
+@media (min-width: 901px) {
+  .coverage-map,
+  .coverage-map-visual .map-points {
+    transform: scale(1.75) translateX(-24%);
+    transform-origin: center;
+  }
 }
 
 .experience-section {
@@ -1253,7 +1264,7 @@ main {
 
   .hero-card {
     min-height: 720px;
-    border-radius: 0 0 62px 62px;
+    border-radius: 0;
   }
 
   .hero-content {
@@ -1432,7 +1443,7 @@ main {
   .hero-card {
     grid-template-columns: minmax(0, 1fr);
     min-height: 650px;
-    border-radius: 0 0 42px 42px;
+    border-radius: 0;
   }
 
   .hero-content {
